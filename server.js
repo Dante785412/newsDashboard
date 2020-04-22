@@ -7,7 +7,7 @@ require('dotenv').config();
 const server = http.createServer((req, res) => {
     console.log('Requesting ' + req.url);
 
-    req.writeHead(200);
+    res.writeHead(200);
     switch (req.url) {
         case '/admin':
             res.end('Admin page');
