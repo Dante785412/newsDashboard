@@ -1,19 +1,27 @@
-const http = require('http');
+const 
+    http = require('http'),
+    fs   = require('fs')
+
 require('dotenv').config();
 
-
+const servePage = (res, pageName) => {
+    res.writeHead(200);
+    let stream = fs.createReadStream('views/' + pageName);
+    stream.pipe(res);
+            
+};
 
 
 const server = http.createServer((req, res) => {
     console.log('Requesting ' + req.url);
 
-    res.writeHead(200);
+   
     switch (req.url) {
-        case '/admin':
-            res.end('Admin page');
+        case '/settings':
+            servePage(res, 'settings.html');
             break;
         default:
-            res.end('News page');
+            servePage(res, 'home.html');
             break;
     }
 });
