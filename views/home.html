@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>HOME</title>
+        <title>{{ title }}</title>
         <link rel="stylesheet" href="/public/css/style.css">
     </head>
     <body>
@@ -12,7 +12,12 @@
             </ul>
         </nav>
         <main>
-            <h1>Welcome to the news dashboard!</h1>
+            <h1>{{ heading }}</h1>
+
+            <ol>
+                <li><a href="{{ url }}" target="_blank">{{ title1 }}</a></li>
+                <li><a href="{{ url }}" target="_blank">Hallo</a></li>
+            </ol>
         </main>
     </body>
 
