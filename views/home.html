@@ -1,24 +1,24 @@
-<!doctype html>
-<html>
-    <head>
-        <title>{{ title }}</title>
-        <link rel="stylesheet" href="/public/css/style.css">
-    </head>
+{{> head }}
     <body>
-        <nav>
-            <ul class="navigation">
-                <li><a href="/home" class="nav-link active">Home</a></li>
-                <li><a href="/settings" class="nav-link">Settings</a></li>
-            </ul>
-        </nav>
+        {{> navigation }}
+       <!-- <nav>
+        <ul class="navigation">
+            <li><a href="/home" class="nav-link {{#if homeActive}}active{{/if}}">Home</a></li>
+            <li><a href="/settings" class="nav-link {{#if settingsActive}}active{{/if}}">Settings</a></li>
+        </ul>
+    </nav> -->
         <main>
             <h1>{{ heading }}</h1>
 
             <ol>
-                <li><a href="{{ url }}" target="_blank">{{ title1 }}</a></li>
-                <li><a href="{{ url }}" target="_blank">Hallo</a></li>
+                {{#each articles}}
+                <li><a href="{{ url }}" target="_blank">{{ title }}</a></li>
+                {{/each}}
             </ol>
         </main>
+
+        {{> footer }}
+
     </body>
 
 </html>

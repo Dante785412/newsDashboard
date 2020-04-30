@@ -1,18 +1,15 @@
-<!doctype html>
-<html>
-    <head>
-        <title>Settings</title>
-        <link rel="stylesheet" href="/public/css/style.css">
-    </head>
+{{> head }}
+    
     <body>
-        <nav>
+        {{> navigation }}
+        <!-- <nav>
             <ul class="navigation">
-                <li><a href="/home" class="nav-link">Home</a></li>
-                <li><a href="/settings" class="nav-link active">Settings</a></li>
+                <li><a href="/home" class="nav-link {{#if homeActive}}active{{/if}}">Home</a></li>
+                <li><a href="/settings" class="nav-link {{#if settingsActive}}active{{/if}}">Settings</a></li>
             </ul>
-        </nav>
+        </nav> -->
         <main>
-            <h1>Settings</h1>
+            <h1>{{ heading }}</h1>
         </main>
     </body>
 

@@ -1,12 +1,57 @@
 const 
-    http = require('http'), // http ist ein COREMODUL
-    fs   = require('fs'),   // Kopieren der htmlDateien in die Respone mit filesystemModul
-    path = require('path'),
-    handlebars = require('handlebars');
-
+    expressHandlebars = require('express-handlebars');
+    express = require('express');
 require('dotenv').config();
 
+const server = express();  // Mit Express einen Server erstellen
 
+server.set('viewDir', 'views');     // server.set wo sind die Templates zu finden sind viewdir wird auf views gesetzt
+
+const logUrlMiddleware = (req, res, next) => {
+    console.log(req.url);
+    next();
+};
+
+server.use(logUrlMiddleware);
+
+server.use(express.static('public'));   // express.static middleware 'public' Verzeichnis das die statischen Dateien enthält
+
+server.set('view engine', 'html');          // standart engine 
+
+server.engine('html', expressHandlebars({   // Welche Template Engine soll benutzt werden
+    extname: 'html'
+}));
+
+const renderHome = (req, res) => {
+    res.render('home', {
+    title: 'News',
+    heading: 'Welcome to the news dashboard!!',
+    homeActive: true,
+     settingsActive: false,
+    articles
+     });
+    };
+
+const renderSettings = (req, res) => {
+    res.render('settings', {
+        title: 'Settings',
+        heading: 'Settings',
+        settingsActive: true
+    });
+};
+
+server.get('/', renderHome);
+server.get('/home', (req, res) => {         // routing mit server.get (http get request)
+    res.render('home', {                    // mit res.render die Antwort (response) 
+        title: 'News',                      // festlegen 'home' ist der Template name
+        heading: 'Welcome to the news dashboard!!',     // und dann die Platzhalter
+        homeActive: true,                   // title: 'News' usw.
+        settingsActive: false,
+        articles
+    });
+});
+server.get('/admin', renderSettings); 
+server.get('/settings', renderSettings);
 
 const articles = [
     {
@@ -19,62 +64,11 @@ const articles = [
     },
     {
         url: 'https://example.com',
-        title: 'Wirtschaft schwächelt stei....'
+        title: 'Wirtschaft schwächelt diesen Sommer....'
     }
 ];
 
-const servePage = (res, pageName, data) => {      // Streams wie ein Netflix-Stream (Daten werden ein zu eins ausgegeben, die veränderung wird dynamisch ausgegeben)
-/*  res.writeHead(200);                     // Antwortkopf schreiben Statuscode 200 = OK
-    let stream = fs.createReadStream('views/' + pageName); // Streams = Datenquelle aus der dynamisch gelesen wird
-    stream.pipe(res); */                                      // writeStream Ziel verknüpfen 
-    
-    
-    fs.readFile('views/' + pageName, 'utf-8', (err, html) =>{
-        if (err) {
-            console.log(err);
-            res.writeHead(500);
-            res.end();
-        }else {
-            res.writeHead(200);
-            const templateFunction = handlebars.compile(html);
-            res.end(templateFunction(data || {}));
-        }
-    });
-    
-};
-
-const serverPublicFile = (res, url) => {
-    res.writeHead(200);                     // Statuscode 200 = OK
-    let stream = fs.createReadStream(path.join(__dirname, url)); 
-    stream.pipe(res);
-}
-                                                    // Wir sind die Serverseite
-const server = http.createServer((req, res) => {  // webserver anlegen (request eingehende Anfrage untersuchen)
-                                                    // (response ausgehende Antwort festlegen)
-    console.log('Requesting ' + req.url); 
-        
-
-    if (req.url.startsWith('/public')) {
-        serverPublicFile(res, req.url);
-        return;
-    }
-
-
-    switch (req.url) {
-        case '/settings':
-            servePage(res, 'settings.html');
-            break;
-        default:
-            servePage(res, 'home.html', {
-                title: 'News',
-                heading: 'Welcome to the news dashboard!!'
-            });
-            break;
-    }
-});
-
-
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {          //  Server starten mit server.listen          
     
     console.log('Server listening at port ' + process.env.PORT);
 });
